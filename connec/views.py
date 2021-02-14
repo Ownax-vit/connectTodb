@@ -85,8 +85,8 @@ class Subd_mysql(View):
 
     def get(self, request, *args, **kwargs):
         form = self.form_class
-        result_mysql = request.session.get('result_mysql=', None)
-        result_mysql_head = request.session.get('result_mysql=_head', None)
+        result_mysql = request.session.get('result_mysql', None)
+        result_mysql_head = request.session.get('result_mysql_head', None)
 
         if result_mysql:
             page_number = request.GET.get('page')
@@ -125,7 +125,8 @@ class Subd_mysql(View):
                 return render(request, self.template_name, {'form': form,
                                                             'msg': msg})
             queryHead = "SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS " \
-                        "WHERE TABLE_NAME= '{}'".format(db_table)
+                        "WHERE TABLE_SCHEMA= '{}' AND TABLE_NAME= '{}'" \
+                        "".format(db_name, db_table)
             resultHead = connect.execute_read_query(queryHead)
 
             request.session['result_mysql'] = result
